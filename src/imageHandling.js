@@ -1,11 +1,13 @@
 const im = require("imagemagick");
+const path = require("path");
+const imageRename = require("./imageRename");
 
 function image(imageName) {
 	const options = {
-		srcPath: `${__dirname}/../in/imageName`,
+		srcPath: path.join(__dirname, `/../in/${imageName}`),
 		srcData: null,
 		srcFormat: null,
-		dstPath: undefined,
+		dstPath: path.join(__dirname, `../out/${imageRename(imageName)}`),
 		quality: 0.8,
 		format: "jpg",
 		progressive: false,
@@ -17,11 +19,11 @@ function image(imageName) {
 		customArgs: []
 	};
 
-	console.log(options);
+	console.log(options.srcPath);
 
-	//im.resize(options, callback(err, stdout, stderr))
-
-	return "ok";
+	return new Promise((res, err) => {
+		res(imageName);
+	});
 }
 
 module.exports = image;
