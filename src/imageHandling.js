@@ -4,7 +4,6 @@ const sharp = require("sharp");
 const cpFile = require("cp-file");
 const chalk = require("chalk");
 const fs = require("fs");
-const filesize = require("filesize");
 
 async function image(imageName) {
 	const newName = imageRename(imageName);
@@ -14,10 +13,9 @@ async function image(imageName) {
 
 	return new Promise(async (res, err) => {
 		const stats = fs.statSync(srcPath);
-		const filesize = Math.round(stats.size / (1024 * 1024));
-		//const fileSizeInMb = filesize(stats.size, { round: 0 });
+		const filesize = stats.size / (1024 * 1024);
 
-		if (filesize < 1) {
+		if (filesize < 0.3) {
 			console.log(chalk`{green ${imageName} is too small, just copied}`);
 			const srcPath = path.join(__dirname, `../in/${imageName}`);
 			await cpFile(srcPath, dstPath)
@@ -25,7 +23,7 @@ async function image(imageName) {
 				.catch(errorCp => err(errorCp));
 		} else {
 			sharp(srcPath)
-				.resize(1000)
+				.resize({ height: 1000 })
 				.toFile(dstPath, function(error) {
 					if (error) {
 						err(error);

@@ -9,7 +9,7 @@ function openFiles() {
 				if (error) {
 					err(error);
 				} else {
-					res(files); // [files[0]]
+					res(files);
 				}
 			});
 		} catch (error) {
