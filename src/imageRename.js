@@ -1,5 +1,5 @@
 function imageRename(imageName) {
-	return imageName;
+	return imageName.split("-").join("");
 }
 
 module.exports = imageRename;
