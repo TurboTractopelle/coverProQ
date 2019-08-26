@@ -1,0 +1,21 @@
+{
+	"name": "covers",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node src/covers.js",
+		"test": "jest"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"jest": "^24.9.0"
+	},
+	"dependencies": {
+		"chalk": "^2.4.2",
+		"node-imagemagick": "^0.1.8",
+		"yargs": "^14.0.0"
+	}
+}
