@@ -1,28 +1,40 @@
-const im = require("imagemagick");
 const path = require("path");
 const imageRename = require("./imageRename");
+const sharp = require("sharp");
+const cpFile = require("cp-file");
+const chalk = require("chalk");
+const fs = require("fs");
+const filesize = require("filesize");
 
-function image(imageName) {
-	const options = {
-		srcPath: path.join(__dirname, `/../in/${imageName}`),
-		srcData: null,
-		srcFormat: null,
-		dstPath: path.join(__dirname, `../out/${imageRename(imageName)}`),
-		quality: 0.8,
-		format: "jpg",
-		progressive: false,
-		width: 0,
-		height: 0,
-		strip: true,
-		filter: "Lagrange",
-		sharpening: 0.2,
-		customArgs: []
-	};
+async function image(imageName) {
+	const newName = imageRename(imageName);
 
-	console.log(options.srcPath);
+	const srcPath = path.join(__dirname, `../in/${imageName}`);
+	const dstPath = path.join(__dirname, `../out/${newName}`);
 
-	return new Promise((res, err) => {
-		res(imageName);
+	return new Promise(async (res, err) => {
+		const stats = fs.statSync(srcPath);
+		const filesize = Math.round(stats.size / (1024 * 1024));
+		//const fileSizeInMb = filesize(stats.size, { round: 0 });
+
+		if (filesize < 1) {
+			console.log(chalk`{green ${imageName} is too small, just copied}`);
+			const srcPath = path.join(__dirname, `../in/${imageName}`);
+			await cpFile(srcPath, dstPath)
+				.then(done => res(`${imageName} is too small, just copied`))
+				.catch(errorCp => err(errorCp));
+		} else {
+			sharp(srcPath)
+				.resize(1000)
+				.toFile(dstPath, function(error) {
+					if (error) {
+						err(error);
+					} else {
+						console.log(chalk`{green ${imageName} was resized}`);
+						res(`${imageName} was resized`);
+					}
+				});
+		}
 	});
 }
 

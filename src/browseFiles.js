@@ -9,8 +9,7 @@ function openFiles() {
 				if (error) {
 					err(error);
 				} else {
-					//console.log([files[0]]);
-					res([files[0]]);
+					res(files); // [files[0]]
 				}
 			});
 		} catch (error) {
